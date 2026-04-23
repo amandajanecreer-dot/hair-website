@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hair Color Mixing Challenge</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #ffe6f7, #e6f0ff);
+        text-align: center;
+        padding: 30px;
+    }
+
+    .game {
+        background: white;
+        max-width: 650px;
+        margin: auto;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .client-box {
+        background: #f7f7f7;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .step {
+        margin: 15px 0;
+    }
+
+    select, button {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin: 5px;
+        font-size: 14px;
+    }
+
+    button {
+        cursor: pointer;
+        border: none;
+        background: #cdb4ff;
+        color: white;
+    }
+
+    button:hover {
+        background: #b18cff;
+    }
+
+    #score {
+        font-size: 20px;
+        margin-top: 15px;
+    }
+
+    #result {
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+    .bar {
+        height: 20px;
+        background: #eee;
+        border-radius: 10px;
+        margin-top: 10px;
+        overflow: hidden;
+    }
+
+    .fill {
+        height: 100%;
+        width: 0%;
+        background: #ff9aa2;
+        transition: 0.3s;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="game">
+    <h1>🎨 Hair Color Mixing Challenge</h1>
+    <p>Match the client's perfect color formula!</p>
+
+    <div class="client-box" id="client"></div>
+
+    <div class="step">
+        <strong>Step 1: Choose Base Color</strong><br>
+        <select id="base">
+            <option value="blonde">Blonde</option>
+            <option value="brown">Brown</option>
+            <option value="black">Black</option>
+            <option value="red">Red</option>
+        </select>
+    </div>
+
+    <div class="step">
+        <strong>Step 2: Choose Developer Strength</strong><br>
+        <select id="dev">
+            <option value="10">10 Vol (soft lift)</option>
+            <option value="20">20 Vol (medium lift)</option>
+            <option value="30">30 Vol (high lift)</option>
+        </select>
+    </div>
+
+    <div class="step">
+        <strong>Step 3: Choose Tone</strong><br>
+        <select id="tone">
+            <option value="ash">Ash</option>
+            <option value="warm">Warm</option>
+            <option value="neutral">Neutral</option>
+            <option value="gold">Gold</option>
+        </select>
+    </div>
+
+    <button onclick="submitMix()">Apply Formula</button>
+    <button onclick="nextClient()">New Client</button>
+
+    <div class="bar">
+        <div class="fill" id="bar"></div>
+    </div>
+
+    <div id="result"></div>
+    <div id="score">Score: 0</div>
+</div>
+
+<script>
+let score = 0;
+
+let client = {};
+
+const clients = [
+    {
+        name: "Emma",
+        goal: { base: "blonde", dev: "20", tone: "ash" },
+        desc: "Cool icy blonde with ash tone"
+    },
+    {
+        name: "Lily",
+        goal: { base: "brown", dev: "30", tone: "warm" },
+        desc: "Rich warm brunette balayage"
+    },
+    {
+        name: "Ava",
+        goal: { base: "black", dev: "10", tone: "neutral" },
+        desc: "Soft natural black gloss"
+    },
+    {
+        name: "Sophia",
+        goal: { base: "red", dev: "20", tone: "gold" },
+        desc: "Golden copper red blend"
+    }
+];
+
+function nextClient() {
+    client = clients[Math.floor(Math.random() * clients.length)];
+
+    document.getElementById("client").innerHTML =
+        `<strong>Client:</strong> ${client.name}<br>
+         <strong>Desired Look:</strong> ${client.desc}`;
+
+    document.getElementById("result").innerText = "";
+    document.getElementById("bar").style.width = "0%";
+}
+
+function submitMix() {
+    let base = document.getElementById("base").value;
+    let dev = document.getElementById("dev").value;
+    let tone = document.getElementById("tone").value;
+
+    let match = 0;
+
+    if (base === client.goal.base) match++;
+    if (dev === client.goal.dev) match++;
+    if (tone === client.goal.tone) match++;
+
+    let percent = (match / 3) * 100;
+    document.getElementById("bar").style.width = percent + "%";
+
+    if (match === 3) {
+        score += 10;
+        document.getElementById("result").innerText = "💖 Perfect formula! +10 points";
+    } else if (match === 2) {
+        score += 6;
+        document.getElementById("result").innerText = "✨ Close match! +6 points";
+    } else if (match === 1) {
+        score += 3;
+        document.getElementById("result").innerText = "🙂 Somewhat off, but salvageable +3 points";
+    } else {
+        score -= 2;
+        document.getElementById("result").innerText = "💔 Disaster color... -2 points";
+    }
+
+    document.getElementById("score").innerText = "Score: " + score;
+}
+
+nextClient();
+</script>
+<a href="index.html">⬅ Back to Home Page</a>
+</body>
+</html>
